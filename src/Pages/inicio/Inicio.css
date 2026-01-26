@@ -1,135 +1,765 @@
-/* Estilos generales con tema rosado */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+/* Inicio.css */
 
-body {
-  font-family: 'Arial', sans-serif;
-  background-color: #fff5f7;
-  color: #555;
-  line-height: 1.6;
-}
-
+/* Fondo animado de flores */
 .inicio-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-/* Hero Section con tema rosado */
-.hero-section {
-  text-align: center;
-  padding: 60px 0;
-  background: linear-gradient(135deg, #ffd6e7 0%, #ffc2d6 100%);
-  border-radius: 15px;
-  margin-bottom: 30px;
-  box-shadow: 0 5px 15px rgba(255, 182, 193, 0.2);
-}
-
-.hero-content h1 {
-  font-size: 2.8em;
-  color: #d81b60;
-  margin-bottom: 20px;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.hero-content p {
-  font-size: 1.2em;
-  color: #880e4f;
-  max-width: 700px;
-  margin: 0 auto 30px;
-}
-
-/* Botón CTA con tema rosado */
-.cta-button {
-  padding: 12px 30px;
-  font-size: 1.1em;
-  background: linear-gradient(to right, #ec407a, #d81b60);
-  color: white;
-  border: none;
-  border-radius: 30px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 8px rgba(216, 27, 96, 0.3);
-}
-
-.cta-button:hover {
-  background: linear-gradient(to right, #d81b60, #ec407a);
-  transform: translateY(-3px);
-  box-shadow: 0 6px 12px rgba(216, 27, 96, 0.4);
-}
-
-.cta-button:active {
-  transform: translateY(0);
-}
-
-/* Sección About con tema rosado */
-.about-preview {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 30px;
-  padding: 30px;
-  background-color: #fff;
-  border-radius: 15px;
-  box-shadow: 0 5px 15px rgba(255, 182, 193, 0.2);
-  border-left: 5px solid #f8bbd0;
-}
-
-.about-content {
-  flex: 1;
-  padding-right: 30px;
-}
-
-.about-content h2 {
-  font-size: 1.8em;
-  color: #d81b60;
-  margin-bottom: 15px;
-}
-
-.about-content p {
-  font-size: 1em;
-  color: #880e4f;
-  line-height: 1.8;
-}
-
-.about-image {
-  flex: 1;
-  height: 250px;
-  background: linear-gradient(45deg, #ffcdd2, #f8bbd0);
-  border-radius: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #d81b60;
-  font-size: 1.2em;
-  overflow: hidden;
   position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background: linear-gradient(135deg, #fff0f5 0%, #fce4ec 100%);
 }
 
-.about-image::before {
-  content: "";
+/* Capa de fondo animada */
+.flower-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(255, 240, 245, 0.3) 0%, rgba(252, 228, 236, 0.3) 100%);
+}
+
+/* Contenedor de flores flotantes */
+.flowers-container {
   position: absolute;
   width: 100%;
   height: 100%;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' width='100' height='100'%3E%3Ccircle cx='30' cy='30' r='5' fill='%23f48fb1' opacity='0.6'/%3E%3Ccircle cx='70' cy='50' r='8' fill='%23f48fb1' opacity='0.4'/%3E%3Ccircle cx='50' cy='70' r='6' fill='%23f48fb1' opacity='0.5'/%3E%3C/svg%3E");
-  opacity: 0.3;
 }
 
-/* Responsive design */
-@media (max-width: 768px) {
-  .about-preview {
+/* Estilos para las flores individuales */
+.flower {
+  position: absolute;
+  opacity: 0.7;
+  animation: floatFlower 20s infinite ease-in-out;
+  font-size: 2rem;
+  filter: drop-shadow(2px 2px 4px rgba(233, 30, 99, 0.4));
+  z-index: 1;
+  will-change: transform, opacity;
+  pointer-events: none;
+}
+
+/* Animación de flores flotantes mejorada */
+@keyframes floatFlower {
+  0% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+    opacity: 0.6;
+  }
+  20% {
+    transform: translate(40px, -50px) rotate(72deg) scale(1.1);
+    opacity: 0.8;
+  }
+  40% {
+    transform: translate(80px, 20px) rotate(144deg) scale(1);
+    opacity: 0.6;
+  }
+  60% {
+    transform: translate(40px, 90px) rotate(216deg) scale(0.9);
+    opacity: 0.8;
+  }
+  80% {
+    transform: translate(-30px, 60px) rotate(288deg) scale(1.05);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate(0, 0) rotate(360deg) scale(1);
+    opacity: 0.6;
+  }
+}
+
+/* Animación alternativa para algunas flores */
+.flower:nth-child(odd) {
+  animation: floatFlower2 25s infinite ease-in-out;
+}
+
+@keyframes floatFlower2 {
+  0% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+    opacity: 0.5;
+  }
+  25% {
+    transform: translate(-50px, -40px) rotate(90deg) scale(1.15);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translate(-100px, 10px) rotate(180deg) scale(1);
+    opacity: 0.5;
+  }
+  75% {
+    transform: translate(-50px, 60px) rotate(270deg) scale(0.85);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate(0, 0) rotate(360deg) scale(1);
+    opacity: 0.5;
+  }
+}
+
+/* Tercera animación para variedad */
+.flower:nth-child(3n) {
+  animation: floatFlower3 30s infinite ease-in-out;
+}
+
+@keyframes floatFlower3 {
+  0% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+    opacity: 0.6;
+  }
+  33% {
+    transform: translate(60px, -30px) rotate(120deg) scale(1.2);
+    opacity: 0.9;
+  }
+  66% {
+    transform: translate(30px, 80px) rotate(240deg) scale(0.8);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translate(0, 0) rotate(360deg) scale(1);
+    opacity: 0.6;
+  }
+}
+
+/* Efecto de parpadeo para algunas flores */
+.flower:nth-child(5n) {
+  animation: floatFlower 20s infinite ease-in-out, blinkFlower 3s infinite ease-in-out;
+}
+
+@keyframes blinkFlower {
+  0%, 100% {
+    opacity: 0.6;
+    filter: drop-shadow(2px 2px 4px rgba(233, 30, 99, 0.4));
+  }
+  50% {
+    opacity: 0.9;
+    filter: drop-shadow(0 0 10px rgba(233, 30, 99, 0.7));
+  }
+}
+
+/* Estilos para el contenido principal */
+.about-preview {
+  position: relative;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 40px;
+  margin: 40px auto;
+  max-width: 1200px;
+  box-shadow: 0 10px 40px rgba(233, 30, 99, 0.15);
+  animation: fadeIn 1s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.about-content {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.about-content h2 {
+  color: #e91e63;
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #e91e63, #f06292);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.about-content p {
+  color: #555;
+  font-size: 1.2rem;
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.about-image {
+  max-width: 800px;
+  margin: 0 auto;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(233, 30, 99, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.about-image:hover {
+  transform: scale(1.02);
+}
+
+.about-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 15px;
+}
+
+/* ===== BOTONES ===== */
+
+/* Contenedor para ambos botones */
+.buttons-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 40px;
+  gap: 30px;
+  width: 100%;
+}
+
+/* Wrappers para cada botón */
+.productos-button-wrapper,
+.videos-button-wrapper {
+  flex: 1;
+}
+
+/* Botón izquierdo */
+.productos-button-wrapper.left-button {
+  text-align: left;
+}
+
+/* Botón derecho */
+.videos-button-wrapper.right-button {
+  text-align: right;
+}
+
+/* Botón base */
+.flower-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 15px;
+  color: white;
+  text-decoration: none;
+  padding: 15px 30px;
+  border-radius: 50px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  box-shadow: 0 8px 25px rgba(233, 30, 99, 0.3);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  border: none;
+  cursor: pointer;
+  min-width: 280px;
+  justify-content: center;
+}
+
+/* Botón de productos (izquierda) */
+.flower-button {
+  background: linear-gradient(135deg, #e91e63, #f06292);
+}
+
+.flower-button:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 35px rgba(233, 30, 99, 0.4);
+  background: linear-gradient(135deg, #f06292, #ec407a);
+}
+
+/* Botón de video (derecha) */
+.flower-button.video-button {
+  background: linear-gradient(135deg, #9c27b0, #673ab7);
+  box-shadow: 0 8px 25px rgba(156, 39, 176, 0.3);
+}
+
+.flower-button.video-button:hover {
+  background: linear-gradient(135deg, #673ab7, #9c27b0);
+  transform: translateY(-5px);
+  box-shadow: 0 12px 35px rgba(156, 39, 176, 0.4);
+}
+
+.flower-button:active {
+  transform: translateY(-2px);
+}
+
+.flower-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: 0.5s;
+}
+
+.flower-button:hover::before {
+  left: 100%;
+}
+
+/* Iconos */
+.flower-button-icon {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bag-icon,
+.video-icon {
+  font-size: 1.8rem;
+  z-index: 2;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.flower-button:hover .bag-icon,
+.flower-button:hover .video-icon {
+  transform: scale(1.1);
+}
+
+/* Pétalos de la flor */
+.flower-petals {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  animation: rotatePetals 10s linear infinite;
+}
+
+.petal {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50% 50% 50% 0;
+  transform-origin: 25px 25px;
+}
+
+.petal-1 {
+  transform: rotate(0deg) translateY(-25px);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.petal-2 {
+  transform: rotate(60deg) translateY(-25px);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.petal-3 {
+  transform: rotate(120deg) translateY(-25px);
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.petal-4 {
+  transform: rotate(180deg) translateY(-25px);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.petal-5 {
+  transform: rotate(240deg) translateY(-25px);
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.petal-6 {
+  transform: rotate(300deg) translateY(-25px);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+@keyframes rotatePetals {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.flower-button:hover .flower-petals {
+  animation-duration: 5s;
+}
+
+/* Texto del botón */
+.flower-button-text {
+  position: relative;
+  z-index: 1;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Efecto de brillo en hover */
+.flower-button::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #e91e63, #f06292, #ec407a, #f48fb1, #e91e63);
+  border-radius: 52px;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.flower-button.video-button::after {
+  background: linear-gradient(45deg, #9c27b0, #673ab7, #3f51b5, #9c27b0);
+}
+
+.flower-button:hover::after {
+  opacity: 1;
+  animation: borderGlow 2s linear infinite;
+}
+
+@keyframes borderGlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* ===== ANIMACIONES BURBUJA ===== */
+
+/* Efecto burbuja 1 - Pop básico */
+@keyframes bubblePop {
+  0% {
+    transform: scale(1);
+    text-shadow: 0 0 0 rgba(255, 255, 255, 0);
+  }
+  30% {
+    transform: scale(1.15);
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+  }
+  50% {
+    transform: scale(0.95);
+    text-shadow: 0 0 25px rgba(255, 255, 255, 1);
+  }
+  70% {
+    transform: scale(1.08);
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.9);
+  }
+  100% {
+    transform: scale(1);
+    text-shadow: 0 0 0 rgba(255, 255, 255, 0);
+  }
+}
+
+/* Efecto burbuja 2 - Temblor suave */
+@keyframes gentleShake {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  25% { transform: translateX(-2px) rotate(-1deg); }
+  50% { transform: translateX(2px) rotate(1deg); }
+  75% { transform: translateX(-1px) rotate(-0.5deg); }
+}
+
+/* Efecto burbuja 3 - Expansión de texto */
+@keyframes textExpand {
+  0% {
+    transform: scale(1);
+    letter-spacing: 0.5px;
+  }
+  50% {
+    transform: scale(1.1);
+    letter-spacing: 2px;
+  }
+  100% {
+    transform: scale(1);
+    letter-spacing: 0.5px;
+  }
+}
+
+/* Efecto burbuja 4 - Rebote */
+@keyframes bounceEffect {
+  0%, 100% { transform: translateY(0); }
+  25% { transform: translateY(-8px); }
+  50% { transform: translateY(4px); }
+  75% { transform: translateY(-2px); }
+}
+
+/* Efecto burbuja 5 - Ultimate bubble */
+@keyframes ultimateBubble {
+  0% {
+    transform: scale(1);
+    text-shadow: 0 0 0 rgba(255, 255, 255, 0);
+  }
+  20% {
+    transform: scale(1.2) rotate(-3deg);
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.9);
+  }
+  40% {
+    transform: scale(0.9) rotate(3deg);
+    text-shadow: 0 0 30px rgba(255, 255, 255, 1);
+  }
+  60% {
+    transform: scale(1.1) rotate(-1deg);
+    text-shadow: 0 0 25px rgba(255, 255, 255, 0.8);
+  }
+  80% {
+    transform: scale(0.95) rotate(1deg);
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    text-shadow: 0 0 0 rgba(255, 255, 255, 0);
+  }
+}
+
+/* Clases para diferentes efectos */
+.effect-1 { animation: bubblePop 0.6s ease-out !important; }
+.effect-2 { animation: gentleShake 0.5s ease-in-out !important; }
+.effect-3 { animation: textExpand 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important; }
+.effect-4 { animation: bounceEffect 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important; }
+.effect-5 { animation: ultimateBubble 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important; }
+
+/* ===== EFECTOS DE PARTÍCULAS ===== */
+
+/* Efecto de partículas de burbuja */
+.bubble-particles {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  top: 0;
+  left: 0;
+}
+
+.bubble-particle {
+  position: absolute;
+  border-radius: 50%;
+  animation: bubbleFloat 1s ease-out forwards;
+  pointer-events: none;
+}
+
+.bubble-particle.pink {
+  background: rgba(233, 30, 99, 0.6);
+}
+
+.bubble-particle.purple {
+  background: rgba(156, 39, 176, 0.6);
+}
+
+@keyframes bubbleFloat {
+  0% {
+    transform: translateY(0) scale(0);
+    opacity: 1;
+  }
+  20% {
+    transform: translateY(-10px) scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-40px) scale(0);
+    opacity: 0;
+  }
+}
+
+/* Efecto de ondas concéntricas */
+.bubble-ripple {
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0);
+  animation: rippleEffect 0.8s ease-out;
+  pointer-events: none;
+}
+
+.bubble-ripple.pink {
+  background: rgba(233, 30, 99, 0.2);
+}
+
+.bubble-ripple.purple {
+  background: rgba(156, 39, 176, 0.2);
+}
+
+@keyframes rippleEffect {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+/* Efecto de destello */
+.bubble-flash {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  animation: flashEffect 0.4s ease-out;
+  pointer-events: none;
+  opacity: 0;
+  top: 0;
+  left: 0;
+}
+
+.bubble-flash.pink {
+  background: linear-gradient(135deg, 
+    rgba(233, 30, 99, 0) 0%,
+    rgba(233, 30, 99, 0.5) 50%,
+    rgba(233, 30, 99, 0) 100%);
+}
+
+.bubble-flash.purple {
+  background: linear-gradient(135deg, 
+    rgba(156, 39, 176, 0) 0%,
+    rgba(156, 39, 176, 0.5) 50%,
+    rgba(156, 39, 176, 0) 100%);
+}
+
+@keyframes flashEffect {
+  0% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+/* Efecto de gotas de agua */
+.bubble-droplet {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  animation: dropletFall 0.6s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes dropletFall {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(30px) scale(0.3);
+    opacity: 0;
+  }
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 992px) {
+  .buttons-container {
     flex-direction: column;
+    gap: 20px;
   }
   
-  .about-content {
-    padding-right: 0;
-    margin-bottom: 20px;
+  .productos-button-wrapper.left-button,
+  .videos-button-wrapper.right-button {
+    text-align: center;
+    width: 100%;
   }
   
-  .hero-content h1 {
-    font-size: 2.2em;
+  .flower-button {
+    min-width: 250px;
+    justify-content: center;
+  }
+  
+  .about-preview {
+    margin: 20px;
+    padding: 20px;
+  }
+  
+  .about-content h2 {
+    font-size: 2rem;
+  }
+  
+  .about-content p {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .flower {
+    font-size: 1.5rem;
+  }
+  
+  .flower-button {
+    padding: 12px 25px;
+    font-size: 1rem;
+    min-width: 220px;
+  }
+  
+  .flower-button-icon {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .petal {
+    width: 16px;
+    height: 16px;
+    transform-origin: 20px 20px;
+  }
+  
+  .petal-1 {
+    transform: rotate(0deg) translateY(-20px);
+  }
+  
+  .flower-button-text {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-preview {
+    margin: 15px;
+    padding: 15px;
+  }
+  
+  .about-content h2 {
+    font-size: 1.8rem;
+  }
+  
+  .about-content p {
+    font-size: 0.9rem;
+  }
+  
+  .flower {
+    font-size: 1.2rem;
+  }
+  
+  .buttons-container {
+    gap: 15px;
+  }
+  
+  .flower-button {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    min-width: 200px;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .flower-button-icon {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .petal {
+    width: 14px;
+    height: 14px;
+    transform-origin: 17.5px 17.5px;
+  }
+  
+  .petal-1 {
+    transform: rotate(0deg) translateY(-17.5px);
+  }
+  
+  .flower-button-text {
+    font-size: 0.9rem;
   }
 } 

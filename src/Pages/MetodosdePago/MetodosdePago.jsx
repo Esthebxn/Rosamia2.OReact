@@ -1,46 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './MetodosdePago.css';
 
 const MetodosdePago = () => {
+  const [showYapeQR, setShowYapeQR] = useState(false);
+
+  // Número de WhatsApp para enviar comprobante
+  const whatsappNumber = "51999999999"; // Reemplaza con tu número
+  const yapePhone = "999888777"; // Reemplaza con tu número Yape
+  const yapeQRImage = "/images/yape-qr.jpg"; // Ruta de tu imagen QR
+
+  const handleWhatsAppClick = () => {
+    const message = `Hola, acabo de realizar un pago via Yape al número ${yapePhone}. Adjunto comprobante de pago.`;
+    const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
+  };
+
   return (
     <section className="metodos-pago">
       <h2>Métodos de Pago</h2>
+      
       <div className="pago-grid">
-        <div className="metodo-pago">
-          <div className="pago-icon">
-            <svg viewBox="0 0 24 24" width="48" height="48">
-              <path fill="#0066cc" d="M5,6H19V18H5V6M5,4A2,2 0 0,0 3,6V18A2,2 0 0,0 5,20H19A2,2 0 0,0 21,18V6A2,2 0 0,0 19,4H5M6,9H18V11H6V9M6,12H16V14H6V12Z"/>
-            </svg>
-          </div>
-          <h3>Tarjeta de Crédito/Débito</h3>
-        </div>
-        <div className="metodo-pago">
-          <div className="pago-icon">
-            <svg viewBox="0 0 24 24" width="48" height="48">
-              <path fill="#00a650" d="M11,8H13V16H11V8M15,8H17V16H15V8M7,8H9V16H7V8M17,3H7C5.9,3 5,3.9 5,5V19C5,20.1 5.9,21 7,21H17C18.1,21 19,20.1 19,19V5C19,3.9 18.1,3 17,3M17,19H7V5H17V19Z"/>
-            </svg>
-          </div>
-          <h3>Transferencia Bancaria</h3>
-        </div>
-        <div className="metodo-pago">
-          <div className="pago-icon">
-            <svg viewBox="0 0 24 24" width="48" height="48">
-              <path fill="#ff6600" d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6M12,8A4,4 0 0,0 8,12A4,4 0 0,0 12,16A4,4 0 0,0 16,12A4,4 0 0,0 12,8Z"/>
-            </svg>
-          </div>
-          <h3>Efectivo</h3>
-        </div>
-        <div className="metodo-pago">
-          <div className="pago-icon">
-            <svg viewBox="0 0 24 24" width="48" height="48">
-              <path fill="#cc0000" d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6M12,8A4,4 0 0,0 8,12A4,4 0 0,0 12,16A4,4 0 0,0 16,12A4,4 0 0,0 12,8Z"/>
-              <text x="12" y="16" text-anchor="middle" fill="white" font-size="10">BCP</text>
-            </svg>
-          </div>
-          <h3>BCP</h3>
-        </div>
-        <div className="metodo-pago">
-          <div className="pago-icon">
+        <div 
+          className={`metodo-pago ${showYapeQR ? 'active' : ''}`}
+          onClick={() => setShowYapeQR(!showYapeQR)}
+        >
+          <div className="pago-icon yape-icon">
             <svg viewBox="0 0 24 24" width="48" height="48">
               <circle cx="12" cy="12" r="10" fill="#6fd256"/>
               <path fill="white" d="M16.5,7.5H15V15H7.5V13.5H6V15A1.5,1.5 0 0,0 7.5,16.5H16.5A1.5,1.5 0 0,0 18,15V9A1.5,1.5 0 0,0 16.5,7.5Z"/>
@@ -48,7 +32,12 @@ const MetodosdePago = () => {
             </svg>
           </div>
           <h3>Yape</h3>
+          <p className="pago-desc">Click para ver QR</p>
+          
+          {/* Efecto de pulso */}
+          <div className="yape-pulse"></div>
         </div>
+
         <div className="metodo-pago">
           <div className="pago-icon">
             <svg viewBox="0 0 24 24" width="48" height="48">
@@ -58,10 +47,97 @@ const MetodosdePago = () => {
             </svg>
           </div>
           <h3>Plin</h3>
+          <p className="pago-desc">Transferencia rápida</p>
         </div>
       </div>
+
+      {/* Modal QR de Yape */}
+      {showYapeQR && (
+        <div className="yape-qr-modal">
+          <div className="qr-modal-content">
+            <button 
+              className="close-qr-btn"
+              onClick={() => setShowYapeQR(false)}
+            >
+              ✕
+            </button>
+            
+            <div className="qr-header">
+              <div className="yape-logo-modal">
+                <div className="yape-circle"></div>
+                <span>YAPE</span>
+              </div>
+              <h3>Escanea para pagar</h3>
+            </div>
+            
+            <div className="qr-container">
+              <div className="qr-animation">
+                {/* Aquí va tu QR real */}
+                <div className="qr-real">
+                  <div className="qr-frame">
+                    <img 
+                      src={yapeQRImage} 
+                      alt="QR Code Yape" 
+                      className="qr-image"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "https://via.placeholder.com/200x200/6fd256/ffffff?text=QR+Yape";
+                      }}
+                    />
+                    <div className="qr-scanner">
+                      <div className="scanner-line"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="qr-info">
+                <div className="qr-phone">
+                  <div className="phone-icon">📱</div>
+                  <div>
+                    <p className="phone-label">Número Yape:</p>
+                    <p className="phone-number">{yapePhone}</p>
+                  </div>
+                </div>
+                
+                <div className="qr-instruction">
+                  <h4>Instrucciones:</h4>
+                  <ol>
+                    <li>Abre la app Yape</li>
+                    <li>Toca <strong>"Pagar con Yape"</strong></li>
+                    <li>Escanea el código QR</li>
+                    <li>Confirma el pago</li>
+                  </ol>
+                </div>
+                
+                <div className="whatsapp-section">
+                  <button 
+                    className="whatsapp-btn"
+                    onClick={handleWhatsAppClick}
+                  >
+                    <span className="whatsapp-icon">💬</span>
+                    Enviar comprobante por WhatsApp
+                  </button>
+                  <p className="whatsapp-note">
+                    Después de pagar, envíanos el comprobante para procesar tu pedido.
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="qr-footer">
+              <div className="qr-notice">
+                <div className="notice-icon">⚠️</div>
+                <p>
+                  <strong>Importante:</strong> El pedido se procesará solo después de recibir el comprobante.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
 
-export default MetodosdePago; 
+export default MetodosdePago;

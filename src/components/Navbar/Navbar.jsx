@@ -1,67 +1,116 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { FiShoppingCart } from 'react-icons/fi';
-import { useCarrito } from '../Carrito/Carrito';
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { FiMenu, FiX, FiChevronDown } from 'react-icons/fi';
 import "./Navbar.css";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { cantidadTotal } = useCarrito();
+  const [scrolled, setScrolled] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(null);
+  const location = useLocation();
+
+  // Efecto para detectar scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Efecto para cerrar menú al cambiar ruta
+  useEffect(() => {
+    setIsOpen(false);
+    setDropdownOpen(null);
+  }, [location.pathname]);
+
+  // Agrupar enlaces en categorías - CENTRADO
+  const menuCategories = [
+    {
+      title: "INICIO",
+      links: [
+        { to: "/inicio", label: "INICIO" },
+        { to: "/productos", label: "PRODUCTOS" },
+        { to: "/nuestros-trabajos", label: "PRODUCTOS EN VIDEOS" },
+        { to: "/catalogo", label: "DESCARGA NUESTRO CATÁLOGO" },
+      ]
+    },
+    {
+      title: "INFORMACIÓN",
+      links: [
+        { to: "/nosotros", label: "NOSOTROS" },
+      ]
+    },
+    {
+      title: "AYUDA",
+      links: [
+        { to: "/como-comprar", label: "CÓMO COMPRAR" },
+        { to: "/envios-y-entrega", label: "ENVÍOS Y ENTREGA" },
+        { to: "/metodos-de-pago", label: "MÉTODOS DE PAGO" },
+      ]
+    }
+  ];
+
+  const toggleDropdown = (index) => {
+    setDropdownOpen(dropdownOpen === index ? null : index);
+  };
 
   return (
-    <nav className="flower-navbar">
-      <div className="nav-container">
-        <div className="menu-toggle" onClick={() => setIsOpen(!isOpen)}>
-          <span></span>
-          <span></span>
-          <span></span>
+    <>
+      {/* Navbar principal */}
+      <nav className={`flower-navbar ${scrolled ? "scrolled" : ""}`}>
+        <div className="nav-container">
+          {/* Menú principal - CENTRADO */}
+          <div className={`nav-links ${isOpen ? "open" : ""}`}>
+            {menuCategories.map((category, index) => (
+              <div 
+                key={index}
+                className={`nav-category ${dropdownOpen === index ? "active" : ""}`}
+                onMouseEnter={() => window.innerWidth > 768 && setDropdownOpen(index)}
+                onMouseLeave={() => window.innerWidth > 768 && setDropdownOpen(null)}
+              >
+                <button 
+                  className="category-title"
+                  onClick={() => toggleDropdown(index)}
+                >
+                  {category.title}
+                  <FiChevronDown className="dropdown-icon" />
+                </button>
+                <div className="dropdown-menu">
+                  {category.links.map((link, linkIndex) => (
+                    <Link
+                      key={linkIndex}
+                      to={link.to}
+                      className={`dropdown-link ${location.pathname === link.to ? "active" : ""} ${
+                        link.label === "DESCARGA NUESTRO CATÁLOGO" ? "catalogo-link" : ""
+                      }`}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Acciones - Solo botón hamburguesa */}
+          <div className="nav-actions">
+            <button 
+              className="menu-toggle" 
+              onClick={() => setIsOpen(!isOpen)}
+              aria-label={isOpen ? "Cerrar menú" : "Abrir menú"}
+            >
+              {isOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+            </button>
+          </div>
         </div>
-        <div className={`nav-links ${isOpen ? "open" : ""}`}>
-          <Link to="/inicio" className="nav-link" onClick={() => setIsOpen(false)}>
-            INICIO
-          </Link>
-          <Link to="/nosotros" className="nav-link" onClick={() => setIsOpen(false)}>
-            NOSOTROS
-          </Link>
-          <Link to="/clientes-satisfechos" className="nav-link" onClick={() => setIsOpen(false)}>
-            CLIENTES SATISFECHOS
-          </Link>
-          <Link to="/como-comprar" className="nav-link" onClick={() => setIsOpen(false)}>
-            CÓMO COMPRAR
-          </Link>
-          <Link to="/productos" className="nav-link" onClick={() => setIsOpen(false)}>
-            PRODUCTOS
-          </Link>
-          <Link to="/envios-y-entrega" className="nav-link" onClick={() => setIsOpen(false)}>
-            ENVÍOS Y ENTREGA
-          </Link>
-          <Link to="/metodos-de-pago" className="nav-link" onClick={() => setIsOpen(false)}>
-            MÉTODOS DE PAGO
-          </Link>
-          <Link to="/nuestro-equipo" className="nav-link" onClick={() => setIsOpen(false)}>
-            NUESTRO EQUIPO
-          </Link>
-          <Link to="/nuestros-logros" className="nav-link" onClick={() => setIsOpen(false)}>
-            NUESTROS LOGROS
-          </Link>
-          <Link to="/nuestros-trabajos" className="nav-link" onClick={() => setIsOpen(false)}>
-            PRODUCTOS EN VIDEOS
-          </Link>
-          <Link to="/carrito" className="nav-link carrito-link" onClick={() => setIsOpen(false)}>
-            <FiShoppingCart className="carrito-icon" />
-            CARRITO
-          </Link>
+
+        {/* Indicador de página activa */}
+        <div className="active-indicator">
+          <div className="indicator-bar"></div>
         </div>
-        
-        {/* Botones de acción rápida */}
-        <div className="nav-actions">
-          <Link to="/carrito" className="action-btn carrito-btn" title="Ir al Carrito">
-            <FiShoppingCart />
-            <span className="cart-badge">{cantidadTotal}</span>
-          </Link>
-        </div>
-      </div>
-    </nav>
+      </nav>
+    </>
   );
 };
 
