@@ -1,11 +1,112 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import './ChatbotRosamia.css'; // Importamos los estilos CSS mejorados
+import './ChatbotRosamia.css';
+
+// Servicio para comunicarse con el backend
+const ChatbotService = {
+  async checkServerStatus() {
+    try {
+      const response = await fetch('http://localhost:5000/health');
+      return response.ok;
+    } catch (error) {
+      console.error('❌ Error al verificar servidor:', error);
+      return false;
+    }
+  },
+
+  async getMessages() {
+    try {
+      const response = await fetch('http://localhost:5000/api/messages');
+      if (!response.ok) throw new Error('Error al obtener mensajes');
+      return await response.json();
+    } catch (error) {
+      console.error('❌ Error obteniendo mensajes:', error);
+      return [];
+    }
+  },
+
+  async saveMessage(message) {
+    try {
+      const response = await fetch('http://localhost:5000/api/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(message)
+      });
+      return await response.json();
+    } catch (error) {
+      console.error('❌ Error guardando mensaje:', error);
+      return null;
+    }
+  },
+
+  async getGeminiResponse(prompt) {
+    try {
+      const response = await fetch('http://localhost:5000/api/chat/message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: prompt })
+      });
+      
+      if (!response.ok) throw new Error('Error en la respuesta de Gemini');
+      
+      const data = await response.json();
+      
+      return {
+        success: data.success || false,
+        response: data.reply || 'Lo siento, no pude procesar tu mensaje.'
+      };
+    } catch (error) {
+      console.error('❌ Error obteniendo respuesta de Gemini:', error);
+      return { 
+        success: false, 
+        response: 'Error al conectar con el servidor de IA.' 
+      };
+    }
+  },
+
+  async saveTraining(keyword, response) {
+    try {
+      const trainingData = {
+        keyword,
+        response,
+        createdAt: new Date().toISOString()
+      };
+      
+      // Guardar en localStorage temporalmente
+      localStorage.setItem(`training_${keyword}`, response);
+      return { success: true };
+    } catch (error) {
+      console.error('❌ Error guardando entrenamiento:', error);
+      return { success: false };
+    }
+  },
+
+  async getTrainingData() {
+    try {
+      // Obtener del localStorage temporalmente
+      const trainingEntries = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith('training_')) {
+          const keyword = key.replace('training_', '');
+          trainingEntries.push({
+            keyword,
+            response: localStorage.getItem(key)
+          });
+        }
+      }
+      return trainingEntries;
+    } catch (error) {
+      console.error('❌ Error obteniendo datos de entrenamiento:', error);
+      return [];
+    }
+  }
+};
 
 const ChatbotRosamia = () => {
   const [messages, setMessages] = useState([
     { 
       id: 1, 
-      text: "¡Hola! Soy Rosamia, tu asistente virtual. Estoy aquí para ayudarte. ¿En qué puedo asistirte hoy?", 
+      text: "¡Hola! Soy Rosamia, tu asistente virtual. Estoy aquí para ayudarte con información sobre nuestros productos y servicios. ¿En qué puedo asistirte hoy?", 
       sender: "bot",
       timestamp: new Date()
     }
@@ -13,45 +114,72 @@ const ChatbotRosamia = () => {
   const [inputValue, setInputValue] = useState("");
   
   // Estados mejorados para el control del chatbot
-  const [chatState, setChatState] = useState('closed'); // 'closed', 'minimized', 'open', 'opening'
+  const [chatState, setChatState] = useState('closed');
   const [isVisible, setIsVisible] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
+  const [serverStatus, setServerStatus] = useState(false);
   
   // Estados para el entrenamiento
   const [isTraining, setIsTraining] = useState(false);
   const [trainingData, setTrainingData] = useState({});
   const [isTyping, setIsTyping] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  
+  // Estado para controlar la posición del chatbot
+  const [chatbotPosition, setChatbotPosition] = useState('right'); // 'left' o 'right'
   
   const messagesEndRef = useRef(null);
   const chatContainerRef = useRef(null);
   const inputRef = useRef(null);
 
-  // Base de conocimiento inicial del chatbot
-  const knowledgeBase = {
-    saludos: [
-      "¡Hola! ¿En qué puedo ayudarte?", 
-      "¡Hola! ¿Cómo estás?",
-      "¡Buenos días! ¿En qué puedo asistirte?",
-      "¡Hola! Es un placer saludarte"
-    ],
-    despedidas: [
-      "¡Hasta luego! Que tengas un excelente día",
-      "Adiós, fue un placer ayudarte",
-      "¡Nos vemos! Siempre estaré aquí cuando me necesites",
-      "¡Que tengas un buen día!"
-    ],
-    ayuda: [
-      "Puedo ayudarte con preguntas generales, responder dudas o simplemente conversar contigo. ¿En qué necesitas ayuda?",
-      "Estoy aquí para asistirte en lo que necesites. ¿Qué te gustaría saber?",
-      "Pregúntame lo que quieras y haré lo posible por ayudarte. También puedes entrenarme para mejorar mis respuestas"
-    ],
-    default: [
-      "Interesante. ¿Podrías contarme más sobre eso?",
-      "No estoy completamente segura de entender. ¿Podrías reformular tu pregunta?",
-      "Eso es algo sobre lo que todavía estoy aprendiendo. ¿Podrías explicarme más?",
-      "Voy a tomar nota de eso para mejorar mis respuestas en el futuro"
-    ]
-  };
+  // Cargar mensajes y datos de entrenamiento al iniciar
+  useEffect(() => {
+    const loadInitialData = async () => {
+      setIsLoading(true);
+      
+      try {
+        // Verificar estado del servidor
+        const serverOk = await ChatbotService.checkServerStatus();
+        setServerStatus(serverOk);
+        setIsOnline(serverOk);
+        
+        if (serverOk) {
+          // Cargar mensajes desde la base de datos
+          const savedMessages = await ChatbotService.getMessages();
+          
+          // Cargar datos de entrenamiento
+          const trainingData = await ChatbotService.getTrainingData();
+          const trainingMap = {};
+          trainingData.forEach(item => {
+            trainingMap[item.keyword] = item.response;
+          });
+          setTrainingData(trainingMap);
+          
+          if (savedMessages.length > 0) {
+            setMessages(savedMessages.map(msg => ({
+              ...msg,
+              timestamp: new Date(msg.timestamp)
+            })));
+          }
+        } else {
+          // Mensaje de error si el servidor no está disponible
+          const offlineMessage = {
+            id: Date.now(),
+            text: "¡Hola! Soy Rosamia. Nota: El modo offline está activado. Algunas funciones pueden estar limitadas.",
+            sender: "bot",
+            timestamp: new Date()
+          };
+          setMessages(prev => [offlineMessage, ...prev.slice(0, 0)]);
+        }
+      } catch (error) {
+        console.error('Error cargando datos iniciales:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    loadInitialData();
+  }, []);
 
   // Función para scroll automático
   const scrollToBottom = useCallback(() => {
@@ -64,14 +192,15 @@ const ChatbotRosamia = () => {
     }
   }, [messages, chatState, scrollToBottom]);
 
-  // Enfocar input cuando se abre el chat
-  useEffect(() => {
-    if (chatState === 'open' && inputRef.current) {
-      setTimeout(() => {
-        inputRef.current.focus();
-      }, 300);
-    }
-  }, [chatState]);
+  // Función para mover el chatbot a la izquierda
+  const moveToLeft = useCallback(() => {
+    setChatbotPosition('left');
+  }, []);
+
+  // Función para mover el chatbot a la derecha
+  const moveToRight = useCallback(() => {
+    setChatbotPosition('right');
+  }, []);
 
   // Función mejorada para abrir el chatbot
   const openChatbot = useCallback(() => {
@@ -103,9 +232,66 @@ const ChatbotRosamia = () => {
     }
   }, [chatState]);
 
-  // Función para encontrar la respuesta más adecuada
-  const findBestResponse = useCallback((input) => {
+  // Enfocar input cuando se abre el chat
+  useEffect(() => {
+    if (chatState === 'open' && inputRef.current) {
+      setTimeout(() => {
+        inputRef.current.focus();
+      }, 300);
+    }
+  }, [chatState]);
+
+  // Función mejorada para obtener respuesta
+  const getBotResponse = useCallback(async (userMessage) => {
+    if (!serverStatus) {
+      // Modo offline - usar respuestas locales
+      return getOfflineResponse(userMessage);
+    }
+    
+    try {
+      // Intentar obtener respuesta de Gemini
+      const geminiResponse = await ChatbotService.getGeminiResponse(userMessage);
+      
+      if (geminiResponse && geminiResponse.success) {
+        return geminiResponse.response;
+      }
+      
+      // Si Gemini falla, buscar en respuestas locales
+      return getOfflineResponse(userMessage);
+    } catch (error) {
+      console.error('Error obteniendo respuesta:', error);
+      return getOfflineResponse(userMessage);
+    }
+  }, [serverStatus]);
+
+  // Respuestas locales para modo offline
+  const getOfflineResponse = useCallback((input) => {
     const inputLower = input.toLowerCase();
+    const knowledgeBase = {
+      saludos: [
+        "¡Hola! ¿En qué puedo ayudarte?", 
+        "¡Hola! ¿Cómo estás?",
+        "¡Buenos días! ¿En qué puedo asistirte?",
+        "¡Hola! Es un placer saludarte"
+      ],
+      despedidas: [
+        "¡Hasta luego! Que tengas un excelente día",
+        "Adiós, fue un placer ayudarte",
+        "¡Nos vemos! Siempre estaré aquí cuando me necesites",
+        "¡Que tengas un buen día!"
+      ],
+      ayuda: [
+        "Puedo ayudarte con preguntas generales, responder dudas o simplemente conversar contigo. ¿En qué necesitas ayuda?",
+        "Estoy aquí para asistirte en lo que necesites. ¿Qué te gustaría saber?",
+        "Pregúntame lo que quieras y haré lo posible por ayudarte. También puedes entrenarme para mejorar mis respuestas"
+      ],
+      default: [
+        "Interesante. ¿Podrías contarme más sobre eso?",
+        "No estoy completamente segura de entender. ¿Podrías reformular tu pregunta?",
+        "Eso es algo sobre lo que todavía estoy aprendiendo. ¿Podrías explicarme más?",
+        "Voy a tomar nota de eso para mejorar mis respuestas en el futuro"
+      ]
+    };
     
     // Detectar saludos
     if (inputLower.includes("hola") || inputLower.includes("buenos días") || 
@@ -135,12 +321,11 @@ const ChatbotRosamia = () => {
       }
     }
     
-    // Respuesta por defecto
     return knowledgeBase.default[Math.floor(Math.random() * knowledgeBase.default.length)];
-  }, [trainingData, knowledgeBase]);
+  }, [trainingData]);
 
   // Función mejorada para enviar mensajes
-  const handleSendMessage = useCallback(() => {
+  const handleSendMessage = useCallback(async () => {
     if (inputValue.trim() === "" || isTyping) return;
     
     // Agregar mensaje del usuario
@@ -157,20 +342,44 @@ const ChatbotRosamia = () => {
     setIsTyping(true);
     
     // Simular respuesta del bot con indicador de escritura
-    setTimeout(() => {
-      const botResponse = findBestResponse(currentInput);
-      
-      const newBotMessage = {
-        id: Date.now() + 1,
-        text: botResponse,
-        sender: "bot",
-        timestamp: new Date()
-      };
-      
-      setMessages(prev => [...prev, newBotMessage]);
-      setIsTyping(false);
+    setTimeout(async () => {
+      try {
+        const botResponse = await getBotResponse(currentInput);
+        
+        const newBotMessage = {
+          id: Date.now() + 1,
+          text: botResponse,
+          sender: "bot",
+          timestamp: new Date()
+        };
+        
+        setMessages(prev => [...prev, newBotMessage]);
+        
+        // Guardar en servidor si está disponible
+        if (serverStatus) {
+          try {
+            await ChatbotService.saveMessage(newUserMessage);
+            await ChatbotService.saveMessage(newBotMessage);
+          } catch (error) {
+            console.error('Error guardando mensajes:', error);
+          }
+        }
+      } catch (error) {
+        console.error('Error obteniendo respuesta:', error);
+        
+        const errorMessage = {
+          id: Date.now() + 1,
+          text: "Lo siento, hubo un error al procesar tu mensaje. Por favor, intenta nuevamente.",
+          sender: "bot",
+          timestamp: new Date()
+        };
+        
+        setMessages(prev => [...prev, errorMessage]);
+      } finally {
+        setIsTyping(false);
+      }
     }, Math.random() * 1000 + 500); // Respuesta más natural
-  }, [inputValue, isTyping, findBestResponse]);
+  }, [inputValue, isTyping, getBotResponse, serverStatus]);
 
   const handleKeyPress = useCallback((e) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -209,7 +418,7 @@ const ChatbotRosamia = () => {
     }
   }, [isTraining]);
 
-  const handleTrainResponse = useCallback(() => {
+  const handleTrainResponse = useCallback(async () => {
     if (inputValue.trim() === "") return;
     
     if (!trainingData.keyword) {
@@ -233,11 +442,15 @@ const ChatbotRosamia = () => {
         [trainingData.keyword]: response
       };
       
+      // Guardar en estado local
       setTrainingData(prev => ({
         ...prev,
         ...newTrainingEntry,
         response
       }));
+      
+      // Guardar en servicio
+      await ChatbotService.saveTraining(trainingData.keyword, response);
       
       const responseMessage = {
         id: Date.now(),
@@ -283,6 +496,17 @@ const ChatbotRosamia = () => {
     </svg>
   );
 
+  // Componente para el icono de mover
+  const MoveIcon = () => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M13 6H11V11H6V13H11V18H13V13H18V11H13V6Z" fill="currentColor"/>
+      <path d="M7 7H5V5H7V7Z" fill="currentColor"/>
+      <path d="M19 7H17V5H19V7Z" fill="currentColor"/>
+      <path d="M7 19H5V17H7V19Z" fill="currentColor"/>
+      <path d="M19 19H17V17H19V19Z" fill="currentColor"/>
+    </svg>
+  );
+
   // Formatear la hora para mostrar en los mensajes
   const formatTime = (date) => {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -296,6 +520,8 @@ const ChatbotRosamia = () => {
     if (chatState === 'minimized') classes.push('minimized');
     if (chatState === 'opening') classes.push('opening');
     if (isTyping) classes.push('loading');
+    if (chatbotPosition === 'left') classes.push('left-side');
+    if (chatbotPosition === 'right') classes.push('right-side');
     
     return classes.join(' ');
   };
@@ -305,11 +531,12 @@ const ChatbotRosamia = () => {
       {/* Botón flotante para abrir el chat */}
       {(!isVisible || chatState === 'closed') && (
         <button 
-          className="chatbot-toggle" 
+          className={`chatbot-toggle ${chatbotPosition === 'left' ? 'left-side' : 'right-side'}`}
           onClick={openChatbot}
           aria-label="Abrir chat con Rosamia"
         >
           <ChatIcon />
+          {!serverStatus && <span className="offline-badge">OFF</span>}
         </button>
       )}
 
@@ -333,6 +560,15 @@ const ChatbotRosamia = () => {
               ></span>
             </div>
             <div className="chatbot-controls">
+              {/* Botón para mover a la izquierda/derecha */}
+              <button 
+                className="control-btn move-btn"
+                onClick={chatbotPosition === 'right' ? moveToLeft : moveToRight}
+                aria-label={`Mover chatbot a la ${chatbotPosition === 'right' ? 'izquierda' : 'derecha'}`}
+                title={`Mover a ${chatbotPosition === 'right' ? 'izquierda' : 'derecha'}`}
+              >
+                <MoveIcon />
+              </button>
               <button 
                 className="control-btn minimize-btn"
                 onClick={toggleMinimize}

@@ -1,0 +1,290 @@
+/* Loading.css */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a0b2e 0%, #3d2352 100%);
+  overflow: hidden;
+  position: relative;
+}
+
+.loading-content {
+  text-align: center;
+  z-index: 10;
+  position: relative;
+  padding: 2rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.loading-title {
+  font-size: 3rem;
+  color: #ff6b9d;
+  margin-bottom: 0.5rem;
+  font-family: 'Georgia', serif;
+  text-shadow: 0 0 10px rgba(255, 107, 157, 0.7);
+  letter-spacing: 2px;
+}
+
+.loading-text {
+  font-size: 1.2rem;
+  color: #e0c3fc;
+  margin-bottom: 2rem;
+  font-weight: 300;
+}
+
+.loading-subtext {
+  font-size: 0.9rem;
+  color: #b39ddb;
+  margin-top: 2rem;
+  font-style: italic;
+  opacity: 0.8;
+}
+
+/* Spinner principal */
+.spinner {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 2rem;
+}
+
+.spinner-circle {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 4px solid transparent;
+  border-top-color: #ff6b9d;
+  border-right-color: #ff6b9d;
+  animation: spin 1.5s linear infinite;
+}
+
+.rose-center {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background: #ff4081;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 15px #ff4081;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Contenedor de rosas flotantes */
+.roses-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Estilo para cada rosa */
+.rose {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+}
+
+/* Pétalos de las rosas */
+.petal {
+  position: absolute;
+  width: 20px;
+  height: 30px;
+  background: linear-gradient(to bottom, #ff6b9d, #ff4081);
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+/* Posición de cada pétalo */
+.p1 {
+  top: 0;
+  left: 10px;
+  transform: rotate(0deg);
+}
+
+.p2 {
+  top: 7px;
+  left: 25px;
+  transform: rotate(72deg);
+}
+
+.p3 {
+  top: 20px;
+  left: 28px;
+  transform: rotate(144deg);
+}
+
+.p4 {
+  top: 28px;
+  left: 15px;
+  transform: rotate(216deg);
+}
+
+.p5 {
+  top: 22px;
+  left: 0;
+  transform: rotate(288deg);
+}
+
+.rose-center-small {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: #ffeb3b;
+  border-radius: 50%;
+  top: 14px;
+  left: 14px;
+  box-shadow: 0 0 8px #ffeb3b;
+}
+
+/* Posiciones y animaciones para cada rosa */
+.rose-1 {
+  top: 10%;
+  left: 10%;
+  animation: floatRose 12s ease-in-out infinite, rotateRose 20s linear infinite;
+  animation-delay: 0s;
+}
+
+.rose-2 {
+  top: 15%;
+  right: 15%;
+  animation: floatRose 15s ease-in-out infinite, rotateRose 25s linear infinite;
+  animation-delay: 1s;
+}
+
+.rose-3 {
+  bottom: 20%;
+  left: 20%;
+  animation: floatRose 18s ease-in-out infinite, rotateRose 30s linear infinite;
+  animation-delay: 2s;
+}
+
+.rose-4 {
+  bottom: 10%;
+  right: 10%;
+  animation: floatRose 14s ease-in-out infinite, rotateRose 22s linear infinite;
+  animation-delay: 3s;
+}
+
+.rose-5 {
+  top: 40%;
+  left: 5%;
+  animation: floatRose 20s ease-in-out infinite, rotateRose 28s linear infinite;
+  animation-delay: 4s;
+}
+
+/* Animaciones de flotación */
+@keyframes floatRose {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-20px) rotate(5deg);
+  }
+  50% {
+    transform: translateY(0) rotate(0deg);
+  }
+  75% {
+    transform: translateY(15px) rotate(-5deg);
+  }
+}
+
+@keyframes rotateRose {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Efectos de brillo intermitente para las rosas */
+.rose::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  background: radial-gradient(circle, rgba(255, 107, 157, 0.3) 0%, transparent 70%);
+  border-radius: 50%;
+  z-index: -1;
+  opacity: 0;
+  animation: glow 3s infinite;
+}
+
+@keyframes glow {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+}
+
+/* Efecto de partículas de pétalos */
+.loading-container::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(2px 2px at 20px 30px, rgba(255, 107, 157, 0.8), transparent),
+    radial-gradient(2px 2px at 40px 70px, rgba(255, 64, 129, 0.8), transparent),
+    radial-gradient(2px 2px at 60px 20px, rgba(255, 107, 157, 0.8), transparent),
+    radial-gradient(2px 2px at 80px 50px, rgba(255, 64, 129, 0.8), transparent),
+    radial-gradient(2px 2px at 90px 80px, rgba(255, 107, 157, 0.8), transparent);
+  background-repeat: repeat;
+  background-size: 100px 100px;
+  animation: floatParticles 60s linear infinite;
+  z-index: 0;
+}
+
+@keyframes floatParticles {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-100px);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .loading-title {
+    font-size: 2.2rem;
+  }
+  
+  .loading-text {
+    font-size: 1rem;
+  }
+  
+  .spinner {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .rose {
+    transform: scale(0.8);
+  }
+} 
