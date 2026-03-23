@@ -1,3 +1,4 @@
+const catalogoRoutes = require("./routes/router.catalogo.routes");
 import express from "express";
 import cors from "cors";
 
@@ -9,7 +10,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Servir archivos PDF (catálogos)
+// Servir archivos PDF (catÃ¡logos)
 app.use("/uploads", express.static("uploads"));
 
 // Rutas API
