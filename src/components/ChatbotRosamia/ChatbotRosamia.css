@@ -965,3 +965,35 @@ input,
     background: rgba(45, 45, 45, 0.95);
   }
 } 
+/* ===== FORZAR CHATBOT AL LADO IZQUIERDO ===== */
+.chatbot-toggle,
+.chatbot-toggle.right-side,
+.chatbot-toggle.left-side {
+  left: 30px !important;
+  right: auto !important;
+}
+
+.chatbot-container,
+.chatbot-container.right-side,
+.chatbot-container.left-side {
+  left: 30px !important;
+  right: auto !important;
+  transform-origin: bottom left !important;
+}
+
+@media (max-width: 480px) {
+  .chatbot-toggle,
+  .chatbot-toggle.right-side,
+  .chatbot-toggle.left-side {
+    left: 20px !important;
+    right: auto !important;
+  }
+
+  .chatbot-container,
+  .chatbot-container.right-side,
+  .chatbot-container.left-side {
+    left: 20px !important;
+    right: 20px !important;
+    transform-origin: bottom left !important;
+  }
+}
