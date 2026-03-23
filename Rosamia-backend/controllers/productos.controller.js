@@ -1,169 +1,166 @@
-const Producto = require('../models/producto.model');
+const Producto = require("../models/producto.model");
 
-exports.getAllProductos = async (req, res) => {
+const getAllProductos = async (req, res) => {
   try {
     const productos = await Producto.findAll();
-    res.json({
+    return res.status(200).json({
       success: true,
-      count: productos.length,
       data: productos
     });
   } catch (error) {
-    console.error('Error:', error);
-    res.status(500).json({
+    console.error("Error en getAllProductos:", error);
+    return res.status(500).json({
       success: false,
-      message: 'Error al obtener productos',
+      message: "Error interno al obtener productos",
       error: error.message
     });
   }
 };
 
-exports.getProductoById = async (req, res) => {
+const getProductoById = async (req, res) => {
   try {
-    const producto = await Producto.findById(req.params.id);
-    
+    const { id } = req.params;
+    const producto = await Producto.findById(id);
+
     if (!producto) {
       return res.status(404).json({
         success: false,
-        message: 'Producto no encontrado'
+        message: "Producto no encontrado"
       });
     }
 
-    res.json({
+    return res.status(200).json({
       success: true,
       data: producto
     });
   } catch (error) {
-    console.error('Error:', error);
-    res.status(500).json({
+    console.error("Error en getProductoById:", error);
+    return res.status(500).json({
       success: false,
-      message: 'Error al obtener el producto',
+      message: "Error interno al obtener el producto",
       error: error.message
     });
   }
 };
 
-exports.createProducto = async (req, res) => {
+const createProducto = async (req, res) => {
   try {
-    const { name, price, image, description, category } = req.body;
+    const { name, category, price, description, image, image2, image3, image4, active } = req.body;
 
-    if (!name || !price || !image) {
+    if (!name || !String(name).trim()) {
       return res.status(400).json({
         success: false,
-        message: 'Nombre, precio e imagen son requeridos'
+        message: "El nombre es obligatorio"
       });
     }
 
-    const insertId = await Producto.create(req.body);
-    const nuevoProducto = await Producto.findById(insertId);
+    const id = await Producto.create({
+      name: String(name).trim(),
+      category,
+      price,
+      description,
+      image,
+      image2,
+      image3,
+      image4,
+      active
+    });
 
-    res.status(201).json({
+    const nuevoProducto = await Producto.findById(id);
+
+    return res.status(201).json({
       success: true,
-      message: 'Producto creado exitosamente',
+      message: "Producto creado correctamente",
       data: nuevoProducto
     });
   } catch (error) {
-    console.error('Error:', error);
-    res.status(500).json({
+    console.error("Error en createProducto:", error);
+    return res.status(500).json({
       success: false,
-      message: 'Error al crear producto',
+      message: "Error interno al crear producto",
       error: error.message
     });
   }
 };
 
-exports.updateProducto = async (req, res) => {
+const updateProducto = async (req, res) => {
   try {
     const { id } = req.params;
-    
-    const existe = await Producto.findById(id);
-    if (!existe) {
-      return res.status(404).json({
-        success: false,
-        message: 'Producto no encontrado'
-      });
-    }
+    const { name, category, price, description, image, image2, image3, image4, active } = req.body;
 
-    await Producto.update(id, req.body);
-    const productoActualizado = await Producto.findById(id);
-
-    res.json({
-      success: true,
-      message: 'Producto actualizado exitosamente',
-      data: productoActualizado
-    });
-  } catch (error) {
-    console.error('Error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error al actualizar producto',
-      error: error.message
-    });
-  }
-};
-
-exports.updateImage = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { image } = req.body;
-
-    if (!image) {
+    if (!name || !String(name).trim()) {
       return res.status(400).json({
         success: false,
-        message: 'URL de imagen requerida'
+        message: "El nombre es obligatorio"
       });
     }
 
-    const existe = await Producto.findById(id);
-    if (!existe) {
+    const updated = await Producto.update(id, {
+      name: String(name).trim(),
+      category,
+      price,
+      description,
+      image,
+      image2,
+      image3,
+      image4,
+      active
+    });
+
+    if (!updated) {
       return res.status(404).json({
         success: false,
-        message: 'Producto no encontrado'
+        message: "Producto no encontrado"
       });
     }
 
-    await Producto.updateImage(id, image);
     const productoActualizado = await Producto.findById(id);
 
-    res.json({
+    return res.status(200).json({
       success: true,
-      message: 'Imagen actualizada exitosamente',
+      message: "Producto actualizado correctamente",
       data: productoActualizado
     });
   } catch (error) {
-    console.error('Error:', error);
-    res.status(500).json({
+    console.error("Error en updateProducto:", error);
+    return res.status(500).json({
       success: false,
-      message: 'Error al actualizar imagen',
+      message: "Error interno al actualizar producto",
       error: error.message
     });
   }
 };
 
-exports.deleteProducto = async (req, res) => {
+const deleteProducto = async (req, res) => {
   try {
     const { id } = req.params;
+    const deleted = await Producto.remove(id);
 
-    const existe = await Producto.findById(id);
-    if (!existe) {
+    if (!deleted) {
       return res.status(404).json({
         success: false,
-        message: 'Producto no encontrado'
+        message: "Producto no encontrado"
       });
     }
 
-    await Producto.delete(id);
-
-    res.json({
+    return res.status(200).json({
       success: true,
-      message: 'Producto eliminado exitosamente'
+      message: "Producto eliminado correctamente"
     });
   } catch (error) {
-    console.error('Error:', error);
-    res.status(500).json({
+    console.error("Error en deleteProducto:", error);
+    return res.status(500).json({
       success: false,
-      message: 'Error al eliminar producto',
+      message: "Error interno al eliminar producto",
       error: error.message
     });
   }
-}; 
+};
+
+module.exports = {
+  getAllProductos,
+  getProductoById,
+  createProducto,
+  updateProducto,
+  deleteProducto
+};

@@ -1,6 +1,6 @@
 // services/ChatbotService.js
 
-const API_BASE_URL = 'http://localhost:5000/api'; // Tu backend en puerto 5000
+const API_BASE_URL = 'http://127.0.0.1:5001/api'; // Tu backend en puerto 5000
 
 export const ChatbotService = {
   // Guardar mensajes en la base de datos
@@ -54,7 +54,7 @@ export const ChatbotService = {
       const trainingData = {
         keyword,
         response,
-        createdAt: new Date().toISOString()
+        created_at: new Date().toISOString()
       };
       
       const result = await fetch(`${API_BASE_URL}/training`, {

@@ -5,42 +5,42 @@ import './ChatbotRosamia.css';
 const ChatbotService = {
   async checkServerStatus() {
     try {
-      const response = await fetch('http://localhost:5000/health');
+      const response = await fetch('/health');
       return response.ok;
     } catch (error) {
-      console.error('❌ Error al verificar servidor:', error);
+      console.error('Ã¢ÂÅ’ Error al verificar servidor:', error);
       return false;
     }
   },
 
   async getMessages() {
     try {
-      const response = await fetch('http://localhost:5000/api/messages');
+      const response = await fetch('/api/messages');
       if (!response.ok) throw new Error('Error al obtener mensajes');
       return await response.json();
     } catch (error) {
-      console.error('❌ Error obteniendo mensajes:', error);
+      console.error('Ã¢ÂÅ’ Error obteniendo mensajes:', error);
       return [];
     }
   },
 
   async saveMessage(message) {
     try {
-      const response = await fetch('http://localhost:5000/api/messages', {
+      const response = await fetch('/api/messages', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(message)
       });
       return await response.json();
     } catch (error) {
-      console.error('❌ Error guardando mensaje:', error);
+      console.error('Ã¢ÂÅ’ Error guardando mensaje:', error);
       return null;
     }
   },
 
   async getGeminiResponse(prompt) {
     try {
-      const response = await fetch('http://localhost:5000/api/chat/message', {
+      const response = await fetch('/api/chat/message', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: prompt })
@@ -55,7 +55,7 @@ const ChatbotService = {
         response: data.reply || 'Lo siento, no pude procesar tu mensaje.'
       };
     } catch (error) {
-      console.error('❌ Error obteniendo respuesta de Gemini:', error);
+      console.error('Ã¢ÂÅ’ Error obteniendo respuesta de Gemini:', error);
       return { 
         success: false, 
         response: 'Error al conectar con el servidor de IA.' 
@@ -75,7 +75,7 @@ const ChatbotService = {
       localStorage.setItem(`training_${keyword}`, response);
       return { success: true };
     } catch (error) {
-      console.error('❌ Error guardando entrenamiento:', error);
+      console.error('Ã¢ÂÅ’ Error guardando entrenamiento:', error);
       return { success: false };
     }
   },
@@ -96,7 +96,7 @@ const ChatbotService = {
       }
       return trainingEntries;
     } catch (error) {
-      console.error('❌ Error obteniendo datos de entrenamiento:', error);
+      console.error('Ã¢ÂÅ’ Error obteniendo datos de entrenamiento:', error);
       return [];
     }
   }
@@ -106,7 +106,7 @@ const ChatbotRosamia = () => {
   const [messages, setMessages] = useState([
     { 
       id: 1, 
-      text: "¡Hola! Soy Rosamia, tu asistente virtual. Estoy aquí para ayudarte con información sobre nuestros productos y servicios. ¿En qué puedo asistirte hoy?", 
+      text: "Ã‚Â¡Hola! Soy Rosamia, tu asistente virtual. Estoy aquÃƒÂ­ para ayudarte con informaciÃƒÂ³n sobre nuestros productos y servicios. Ã‚Â¿En quÃƒÂ© puedo asistirte hoy?", 
       sender: "bot",
       timestamp: new Date()
     }
@@ -125,7 +125,7 @@ const ChatbotRosamia = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   
-  // Estado para controlar la posición del chatbot
+  // Estado para controlar la posiciÃƒÂ³n del chatbot
   const [chatbotPosition, setChatbotPosition] = useState('right'); // 'left' o 'right'
   
   const messagesEndRef = useRef(null);
@@ -162,10 +162,10 @@ const ChatbotRosamia = () => {
             })));
           }
         } else {
-          // Mensaje de error si el servidor no está disponible
+          // Mensaje de error si el servidor no estÃƒÂ¡ disponible
           const offlineMessage = {
             id: Date.now(),
-            text: "¡Hola! Soy Rosamia. Nota: El modo offline está activado. Algunas funciones pueden estar limitadas.",
+            text: "Ã‚Â¡Hola! Soy Rosamia. Nota: El modo offline estÃƒÂ¡ activado. Algunas funciones pueden estar limitadas.",
             sender: "bot",
             timestamp: new Date()
           };
@@ -181,7 +181,7 @@ const ChatbotRosamia = () => {
     loadInitialData();
   }, []);
 
-  // Función para scroll automático
+  // FunciÃƒÂ³n para scroll automÃƒÂ¡tico
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, []);
@@ -192,38 +192,38 @@ const ChatbotRosamia = () => {
     }
   }, [messages, chatState, scrollToBottom]);
 
-  // Función para mover el chatbot a la izquierda
+  // FunciÃƒÂ³n para mover el chatbot a la izquierda
   const moveToLeft = useCallback(() => {
     setChatbotPosition('left');
   }, []);
 
-  // Función para mover el chatbot a la derecha
+  // FunciÃƒÂ³n para mover el chatbot a la derecha
   const moveToRight = useCallback(() => {
     setChatbotPosition('right');
   }, []);
 
-  // Función mejorada para abrir el chatbot
+  // FunciÃƒÂ³n mejorada para abrir el chatbot
   const openChatbot = useCallback(() => {
     setIsVisible(true);
     setChatState('opening');
     
-    // Cambiar a 'open' después de la animación
+    // Cambiar a 'open' despuÃƒÂ©s de la animaciÃƒÂ³n
     setTimeout(() => {
       setChatState('open');
     }, 300);
   }, []);
 
-  // Función para cerrar el chatbot
+  // FunciÃƒÂ³n para cerrar el chatbot
   const closeChatbot = useCallback(() => {
     setChatState('closed');
     
-    // Ocultar completamente después de la animación
+    // Ocultar completamente despuÃƒÂ©s de la animaciÃƒÂ³n
     setTimeout(() => {
       setIsVisible(false);
     }, 400);
   }, []);
 
-  // Función para minimizar/maximizar
+  // FunciÃƒÂ³n para minimizar/maximizar
   const toggleMinimize = useCallback(() => {
     if (chatState === 'minimized') {
       setChatState('open');
@@ -241,7 +241,7 @@ const ChatbotRosamia = () => {
     }
   }, [chatState]);
 
-  // Función mejorada para obtener respuesta
+  // FunciÃƒÂ³n mejorada para obtener respuesta
   const getBotResponse = useCallback(async (userMessage) => {
     if (!serverStatus) {
       // Modo offline - usar respuestas locales
@@ -269,48 +269,48 @@ const ChatbotRosamia = () => {
     const inputLower = input.toLowerCase();
     const knowledgeBase = {
       saludos: [
-        "¡Hola! ¿En qué puedo ayudarte?", 
-        "¡Hola! ¿Cómo estás?",
-        "¡Buenos días! ¿En qué puedo asistirte?",
-        "¡Hola! Es un placer saludarte"
+        "Ã‚Â¡Hola! Ã‚Â¿En quÃƒÂ© puedo ayudarte?", 
+        "Ã‚Â¡Hola! Ã‚Â¿CÃƒÂ³mo estÃƒÂ¡s?",
+        "Ã‚Â¡Buenos dÃƒÂ­as! Ã‚Â¿En quÃƒÂ© puedo asistirte?",
+        "Ã‚Â¡Hola! Es un placer saludarte"
       ],
       despedidas: [
-        "¡Hasta luego! Que tengas un excelente día",
-        "Adiós, fue un placer ayudarte",
-        "¡Nos vemos! Siempre estaré aquí cuando me necesites",
-        "¡Que tengas un buen día!"
+        "Ã‚Â¡Hasta luego! Que tengas un excelente dÃƒÂ­a",
+        "AdiÃƒÂ³s, fue un placer ayudarte",
+        "Ã‚Â¡Nos vemos! Siempre estarÃƒÂ© aquÃƒÂ­ cuando me necesites",
+        "Ã‚Â¡Que tengas un buen dÃƒÂ­a!"
       ],
       ayuda: [
-        "Puedo ayudarte con preguntas generales, responder dudas o simplemente conversar contigo. ¿En qué necesitas ayuda?",
-        "Estoy aquí para asistirte en lo que necesites. ¿Qué te gustaría saber?",
-        "Pregúntame lo que quieras y haré lo posible por ayudarte. También puedes entrenarme para mejorar mis respuestas"
+        "Puedo ayudarte con preguntas generales, responder dudas o simplemente conversar contigo. Ã‚Â¿En quÃƒÂ© necesitas ayuda?",
+        "Estoy aquÃƒÂ­ para asistirte en lo que necesites. Ã‚Â¿QuÃƒÂ© te gustarÃƒÂ­a saber?",
+        "PregÃƒÂºntame lo que quieras y harÃƒÂ© lo posible por ayudarte. TambiÃƒÂ©n puedes entrenarme para mejorar mis respuestas"
       ],
       default: [
-        "Interesante. ¿Podrías contarme más sobre eso?",
-        "No estoy completamente segura de entender. ¿Podrías reformular tu pregunta?",
-        "Eso es algo sobre lo que todavía estoy aprendiendo. ¿Podrías explicarme más?",
+        "Interesante. Ã‚Â¿PodrÃƒÂ­as contarme mÃƒÂ¡s sobre eso?",
+        "No estoy completamente segura de entender. Ã‚Â¿PodrÃƒÂ­as reformular tu pregunta?",
+        "Eso es algo sobre lo que todavÃƒÂ­a estoy aprendiendo. Ã‚Â¿PodrÃƒÂ­as explicarme mÃƒÂ¡s?",
         "Voy a tomar nota de eso para mejorar mis respuestas en el futuro"
       ]
     };
     
     // Detectar saludos
-    if (inputLower.includes("hola") || inputLower.includes("buenos días") || 
+    if (inputLower.includes("hola") || inputLower.includes("buenos dÃƒÂ­as") || 
         inputLower.includes("buenas tardes") || inputLower.includes("buenas noches") ||
         inputLower.includes("hi") || inputLower.includes("hello")) {
       return knowledgeBase.saludos[Math.floor(Math.random() * knowledgeBase.saludos.length)];
     }
     
     // Detectar despedidas
-    if (inputLower.includes("adiós") || inputLower.includes("chao") || 
+    if (inputLower.includes("adiÃƒÂ³s") || inputLower.includes("chao") || 
         inputLower.includes("nos vemos") || inputLower.includes("hasta luego") ||
         inputLower.includes("bye") || inputLower.includes("hasta la vista")) {
       return knowledgeBase.despedidas[Math.floor(Math.random() * knowledgeBase.despedidas.length)];
     }
     
     // Detectar preguntas de ayuda
-    if (inputLower.includes("ayuda") || inputLower.includes("qué puedes hacer") || 
-        inputLower.includes("para qué sirves") || inputLower.includes("help") ||
-        inputLower.includes("cómo funcionas")) {
+    if (inputLower.includes("ayuda") || inputLower.includes("quÃƒÂ© puedes hacer") || 
+        inputLower.includes("para quÃƒÂ© sirves") || inputLower.includes("help") ||
+        inputLower.includes("cÃƒÂ³mo funcionas")) {
       return knowledgeBase.ayuda[Math.floor(Math.random() * knowledgeBase.ayuda.length)];
     }
     
@@ -324,7 +324,7 @@ const ChatbotRosamia = () => {
     return knowledgeBase.default[Math.floor(Math.random() * knowledgeBase.default.length)];
   }, [trainingData]);
 
-  // Función mejorada para enviar mensajes
+  // FunciÃƒÂ³n mejorada para enviar mensajes
   const handleSendMessage = useCallback(async () => {
     if (inputValue.trim() === "" || isTyping) return;
     
@@ -355,7 +355,7 @@ const ChatbotRosamia = () => {
         
         setMessages(prev => [...prev, newBotMessage]);
         
-        // Guardar en servidor si está disponible
+        // Guardar en servidor si estÃƒÂ¡ disponible
         if (serverStatus) {
           try {
             await ChatbotService.saveMessage(newUserMessage);
@@ -378,7 +378,7 @@ const ChatbotRosamia = () => {
       } finally {
         setIsTyping(false);
       }
-    }, Math.random() * 1000 + 500); // Respuesta más natural
+    }, Math.random() * 1000 + 500); // Respuesta mÃƒÂ¡s natural
   }, [inputValue, isTyping, getBotResponse, serverStatus]);
 
   const handleKeyPress = useCallback((e) => {
@@ -392,7 +392,7 @@ const ChatbotRosamia = () => {
     }
   }, [isTraining, handleSendMessage]);
 
-  // Función mejorada para el entrenamiento
+  // FunciÃƒÂ³n mejorada para el entrenamiento
   const handleTraining = useCallback(() => {
     if (isTraining) {
       setIsTraining(false);
@@ -401,7 +401,7 @@ const ChatbotRosamia = () => {
       
       const cancelMessage = {
         id: Date.now(),
-        text: "Entrenamiento cancelado. ¡Sigamos conversando!",
+        text: "Entrenamiento cancelado. Ã‚Â¡Sigamos conversando!",
         sender: "bot",
         timestamp: new Date()
       };
@@ -410,7 +410,7 @@ const ChatbotRosamia = () => {
       setIsTraining(true);
       const trainingMessage = {
         id: Date.now(),
-        text: "🎓 Modo entrenamiento activado. Escribe una palabra clave o frase que quieras que aprenda:",
+        text: "Ã°Å¸Å½â€œ Modo entrenamiento activado. Escribe una palabra clave o frase que quieras que aprenda:",
         sender: "bot",
         timestamp: new Date()
       };
@@ -428,7 +428,7 @@ const ChatbotRosamia = () => {
       
       const keywordMessage = {
         id: Date.now(),
-        text: `✅ Palabra clave "${keyword}" guardada. Ahora escribe la respuesta que debería dar cuando detecte esta palabra:`,
+        text: `Ã¢Å“â€¦ Palabra clave "${keyword}" guardada. Ahora escribe la respuesta que deberÃƒÂ­a dar cuando detecte esta palabra:`,
         sender: "bot",
         timestamp: new Date()
       };
@@ -454,7 +454,7 @@ const ChatbotRosamia = () => {
       
       const responseMessage = {
         id: Date.now(),
-        text: `🎉 ¡Perfecto! Ahora responderé "${response}" cuando detecte la palabra "${trainingData.keyword}". ¡Gracias por enseñarme!`,
+        text: `Ã°Å¸Å½â€° Ã‚Â¡Perfecto! Ahora responderÃƒÂ© "${response}" cuando detecte la palabra "${trainingData.keyword}". Ã‚Â¡Gracias por enseÃƒÂ±arme!`,
         sender: "bot",
         timestamp: new Date()
       };
@@ -462,7 +462,7 @@ const ChatbotRosamia = () => {
       setMessages(prev => [...prev, responseMessage]);
       setInputValue("");
       
-      // Salir del modo entrenamiento después de un momento
+      // Salir del modo entrenamiento despuÃƒÂ©s de un momento
       setTimeout(() => {
         setIsTraining(false);
         setTrainingData({});
@@ -512,7 +512,7 @@ const ChatbotRosamia = () => {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
 
-  // Determinar las clases CSS según el estado
+  // Determinar las clases CSS segÃƒÂºn el estado
   const getContainerClasses = () => {
     const classes = ['chatbot-container'];
     
@@ -528,7 +528,7 @@ const ChatbotRosamia = () => {
 
   return (
     <>
-      {/* Botón flotante para abrir el chat */}
+      {/* BotÃƒÂ³n flotante para abrir el chat */}
       {(!isVisible || chatState === 'closed') && (
         <button 
           className={`chatbot-toggle ${chatbotPosition === 'left' ? 'left-side' : 'right-side'}`}
@@ -556,11 +556,11 @@ const ChatbotRosamia = () => {
               <h2 id="chatbot-title">Rosamia</h2>
               <span 
                 className={`status-dot ${isOnline ? '' : 'offline'}`}
-                title={isOnline ? 'En línea' : 'Fuera de línea'}
+                title={isOnline ? 'En lÃƒÂ­nea' : 'Fuera de lÃƒÂ­nea'}
               ></span>
             </div>
             <div className="chatbot-controls">
-              {/* Botón para mover a la izquierda/derecha */}
+              {/* BotÃƒÂ³n para mover a la izquierda/derecha */}
               <button 
                 className="control-btn move-btn"
                 onClick={chatbotPosition === 'right' ? moveToLeft : moveToRight}
@@ -575,7 +575,7 @@ const ChatbotRosamia = () => {
                 aria-label={chatState === 'minimized' ? 'Maximizar chat' : 'Minimizar chat'}
                 title={chatState === 'minimized' ? 'Maximizar' : 'Minimizar'}
               >
-                {chatState === 'minimized' ? '□' : '−'}
+                {chatState === 'minimized' ? 'Ã¢â€“Â¡' : 'Ã¢Ë†â€™'}
               </button>
               <button 
                 className="control-btn close-btn"
@@ -583,12 +583,12 @@ const ChatbotRosamia = () => {
                 aria-label="Cerrar chat"
                 title="Cerrar"
               >
-                ×
+                Ãƒâ€”
               </button>
             </div>
           </div>
           
-          {/* Área de mensajes */}
+          {/* ÃƒÂrea de mensajes */}
           {chatState !== 'minimized' && (
             <>
               <div className="chatbot-messages" role="log" aria-live="polite">
@@ -607,7 +607,7 @@ const ChatbotRosamia = () => {
                     <div className="message-content">
                       <p>
                         <span className="typing-indicator">
-                          Rosamia está escribiendo
+                          Rosamia estÃƒÂ¡ escribiendo
                           <span>.</span><span>.</span><span>.</span>
                         </span>
                       </p>
@@ -618,7 +618,7 @@ const ChatbotRosamia = () => {
                 <div ref={messagesEndRef} />
               </div>
               
-              {/* Área de entrada mejorada */}
+              {/* ÃƒÂrea de entrada mejorada */}
               <div className="chatbot-input">
                 <input
                   ref={inputRef}
@@ -638,13 +638,13 @@ const ChatbotRosamia = () => {
                 <button 
                   onClick={isTraining ? handleTrainResponse : handleSendMessage}
                   disabled={isTyping || inputValue.trim() === ""}
-                  aria-label={isTraining ? "Enseñar respuesta" : "Enviar mensaje"}
+                  aria-label={isTraining ? "EnseÃƒÂ±ar respuesta" : "Enviar mensaje"}
                 >
-                  {isTraining ? (trainingData.keyword ? "Enseñar" : "Aprender") : "Enviar"}
+                  {isTraining ? (trainingData.keyword ? "EnseÃƒÂ±ar" : "Aprender") : "Enviar"}
                 </button>
               </div>
               
-              {/* Botones de acción */}
+              {/* Botones de acciÃƒÂ³n */}
               <div className="chatbot-actions">
                 <button 
                   className="training-btn" 
@@ -652,7 +652,7 @@ const ChatbotRosamia = () => {
                   disabled={isTyping}
                   aria-label={isTraining ? "Cancelar entrenamiento" : "Entrenar a Rosamia"}
                 >
-                  {isTraining ? "Cancelar Entrenamiento" : "🎓 Entrenar a Rosamia"}
+                  {isTraining ? "Cancelar Entrenamiento" : "Ã°Å¸Å½â€œ Entrenar a Rosamia"}
                 </button>
               </div>
             </>

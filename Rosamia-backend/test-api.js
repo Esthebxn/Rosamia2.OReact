@@ -1,6 +1,6 @@
 const testUpdateImage = async () => {
   try {
-    const response = await fetch('http://localhost:5000/api/productos/1/image', {
+    const response = await fetch('http://127.0.0.1:5001/api/productos/1/image', {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',

@@ -1,54 +1,94 @@
-const db = require('../config/db');
+const db = require("../config/db");
 
-class Producto {
-  static async findAll() {
-    const [rows] = await db.query(
-      'SELECT * FROM productos WHERE active = 1 ORDER BY createdAt DESC'
-    );
+const Producto = {
+  findAll: async () => {
+    const [rows] = await db.query(`
+      SELECT id, name, category, price, description, image, image2, image3, image4, active
+      FROM productos
+      ORDER BY id DESC
+    `);
     return rows;
-  }
+  },
 
-  static async findById(id) {
+  findById: async (id) => {
     const [rows] = await db.query(
-      'SELECT * FROM productos WHERE id = ? AND active = 1',
+      `
+      SELECT id, name, category, price, description, image, image2, image3, image4, active
+      FROM productos
+      WHERE id = ?
+      LIMIT 1
+      `,
       [id]
     );
-    return rows[0];
-  }
+    return rows[0] || null;
+  },
 
-  static async create(data) {
-    const { name, price, image, description, category } = data;
+  create: async (data) => {
     const [result] = await db.query(
-      'INSERT INTO productos (name, price, image, description, category) VALUES (?, ?, ?, ?, ?)',
-      [name, price, image, description || '', category || 'general']
+      `
+      INSERT INTO productos (name, category, price, description, image, image2, image3, image4, active)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `,
+      [
+        data.name,
+        data.category || null,
+        Number(data.price || 0),
+        data.description || null,
+        data.image || null,
+        data.image2 || null,
+        data.image3 || null,
+        data.image4 || null,
+        Number(data.active) === 1 ? 1 : 0
+      ]
     );
+
     return result.insertId;
-  }
+  },
 
-  static async update(id, data) {
-    const { name, price, image, description, category } = data;
+  update: async (id, data) => {
     const [result] = await db.query(
-      'UPDATE productos SET name = ?, price = ?, image = ?, description = ?, category = ? WHERE id = ?',
-      [name, price, image, description, category, id]
+      `
+      UPDATE productos
+      SET
+        name = ?,
+        category = ?,
+        price = ?,
+        description = ?,
+        image = ?,
+        image2 = ?,
+        image3 = ?,
+        image4 = ?,
+        active = ?
+      WHERE id = ?
+      `,
+      [
+        data.name,
+        data.category || null,
+        Number(data.price || 0),
+        data.description || null,
+        data.image || null,
+        data.image2 || null,
+        data.image3 || null,
+        data.image4 || null,
+        Number(data.active) === 1 ? 1 : 0,
+        id
+      ]
     );
-    return result.affectedRows;
-  }
 
-  static async updateImage(id, imageUrl) {
-    const [result] = await db.query(
-      'UPDATE productos SET image = ? WHERE id = ?',
-      [imageUrl, id]
-    );
     return result.affectedRows;
-  }
+  },
 
-  static async delete(id) {
+  remove: async (id) => {
     const [result] = await db.query(
-      'UPDATE productos SET active = 0 WHERE id = ?',
+      `
+      DELETE FROM productos
+      WHERE id = ?
+      `,
       [id]
     );
+
     return result.affectedRows;
   }
-}
+};
 
-module.exports = Producto;  
+module.exports = Producto;

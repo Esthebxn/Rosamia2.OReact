@@ -1,0 +1,271 @@
+.detalle-page {
+  min-height: 100vh;
+  background: #fff7fb;
+  padding: 28px 22px 50px;
+}
+
+.detalle-breadcrumb {
+  max-width: 1380px;
+  margin: 0 auto 18px;
+  color: #7a7a7a;
+  font-size: 0.95rem;
+}
+
+.detalle-breadcrumb a {
+  text-decoration: none;
+  color: #c12f68;
+  font-weight: 700;
+}
+
+.detalle-layout {
+  max-width: 1380px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 100px 1fr 420px;
+  gap: 26px;
+  align-items: start;
+}
+
+.detalle-gallery {
+  display: contents;
+}
+
+.detalle-thumbs {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.thumb-item {
+  width: 78px;
+  height: 78px;
+  padding: 0;
+  border: 2px solid #d7d7d7;
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
+  overflow: hidden;
+  transition: 0.2s ease;
+}
+
+.thumb-item.active {
+  border-color: #1f8fff;
+  box-shadow: 0 0 0 2px rgba(31, 143, 255, 0.12);
+}
+
+.thumb-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  background: #fff;
+}
+
+.detalle-main-image {
+  background: #fff;
+  border: 1px solid #ebebeb;
+  border-radius: 22px;
+  min-height: 620px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.detalle-main-image img {
+  max-width: 100%;
+  max-height: 560px;
+  object-fit: contain;
+  display: block;
+}
+
+.detalle-summary {
+  background: #fff;
+  border-radius: 22px;
+  border: 1px solid #ebebeb;
+  padding: 24px;
+}
+
+.detalle-brand {
+  font-size: 0.92rem;
+  color: #6d7b96;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  margin-bottom: 10px;
+}
+
+.detalle-title {
+  margin: 0 0 18px;
+  font-size: 1.18rem;
+  line-height: 1.5;
+  color: #0e2341;
+  font-weight: 800;
+}
+
+.detalle-code {
+  color: #637188;
+  margin: 0 0 22px;
+  font-size: 0.98rem;
+}
+
+.detalle-whatsapp-btn {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border-radius: 999px;
+  text-decoration: none;
+  background: #fff;
+  color: #0e2341;
+  border: 1px solid #d9dce3;
+  padding: 16px 18px;
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 24px;
+  transition: 0.2s ease;
+}
+
+.detalle-whatsapp-btn:hover {
+  background: #f8f9fb;
+}
+
+.detalle-price-box {
+  padding: 18px 0;
+  border-top: 1px solid #eceff4;
+}
+
+.detalle-price-box:first-of-type {
+  border-top: none;
+}
+
+.detalle-price-label {
+  margin: 0 0 10px;
+  color: #55637c;
+  font-size: 0.95rem;
+}
+
+.detalle-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.detalle-price-main,
+.detalle-price-secondary {
+  color: #0c2140;
+  font-weight: 800;
+  font-size: 1.35rem;
+}
+
+.detalle-igv {
+  color: #6b7486;
+  margin-top: 10px;
+  margin-bottom: 22px;
+}
+
+.detalle-description-box {
+  background: #fbfbfd;
+  border: 1px solid #eceff4;
+  border-radius: 16px;
+  padding: 16px;
+  margin-top: 16px;
+}
+
+.detalle-description-box h3 {
+  margin: 0 0 8px;
+  color: #0c2140;
+}
+
+.detalle-description-box p {
+  margin: 0;
+  color: #4d5668;
+  line-height: 1.7;
+}
+
+.detalle-extra-actions {
+  margin-top: 20px;
+}
+
+.btn-back {
+  border: none;
+  border-radius: 12px;
+  padding: 12px 16px;
+  background: #f0d8e3;
+  color: #8b1e4f;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-back:hover {
+  background: #e6c8d6;
+}
+
+.detalle-status-card {
+  max-width: 700px;
+  margin: 60px auto;
+  background: #fff;
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  text-align: center;
+}
+
+.detalle-status-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 18px;
+}
+
+.detalle-status-actions button {
+  border: none;
+  border-radius: 10px;
+  padding: 12px 16px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.spinner {
+  width: 42px;
+  height: 42px;
+  border: 4px solid #f2cddd;
+  border-top: 4px solid #b03060;
+  border-radius: 50%;
+  margin: 0 auto 15px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 1180px) {
+  .detalle-layout {
+    grid-template-columns: 90px 1fr;
+  }
+
+  .detalle-summary {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 760px) {
+  .detalle-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .detalle-thumbs {
+    order: 2;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .detalle-main-image {
+    min-height: 360px;
+  }
+}

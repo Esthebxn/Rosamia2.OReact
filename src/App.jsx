@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+﻿import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 // Layout
@@ -8,6 +8,7 @@ import Footer from "./components/Footer/Footer";
 // Pages
 import Inicio from "./Pages/inicio/Inicio";
 import Productos from "./Pages/Productos/Productos";
+import DetalleProducto from "./Pages/DetalleProducto";
 import Nosotros from "./Pages/Nosotros/Nosotros";
 import ComoComprar from "./Pages/ComoComprar/ComoComprar";
 import Enviosyentrega from "./Pages/Enviosyentrega/Enviosyentrega";
@@ -18,7 +19,7 @@ import CatalogoRosamia from "./Pages/CatalogoRosamia/CatalogoRosamia";
 // Components
 import WhatsAppChat from "./components/WhatsAppChat/WhatsAppChat";
 import ChatbotRosamia from "./components/ChatbotRosamia/ChatbotRosamia";
-import Loading from "./components/Loading/Loading"; // 👈 NUEVO
+import Loading from "./components/Loading/Loading";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -26,7 +27,7 @@ function App() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 2000); // ⏳ duración del loading (ms)
+    }, 2000);
 
     return () => clearTimeout(timer);
   }, []);
@@ -42,12 +43,11 @@ function App() {
 
         <main className="flex-grow">
           <Routes>
-            {/* Redirección inicial */}
             <Route path="/" element={<Navigate to="/inicio" replace />} />
 
-            {/* Rutas principales */}
             <Route path="/inicio" element={<Inicio />} />
             <Route path="/productos" element={<Productos />} />
+            <Route path="/productos/:id" element={<DetalleProducto />} />
             <Route path="/catalogo" element={<CatalogoRosamia />} />
             <Route
               path="/nuestros-trabajos"
@@ -58,14 +58,11 @@ function App() {
             <Route path="/envios-y-entrega" element={<Enviosyentrega />} />
             <Route path="/metodos-de-pago" element={<MetodosdePago />} />
 
-            {/* Ruta 404 */}
             <Route path="*" element={<Navigate to="/inicio" replace />} />
           </Routes>
         </main>
 
         <Footer />
-
-        {/* Componentes flotantes */}
         <ChatbotRosamia />
         <WhatsAppChat />
       </div>
@@ -74,4 +71,3 @@ function App() {
 }
 
 export default App;
- 

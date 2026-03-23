@@ -1,6 +1,6 @@
-const db = require('../config/database');
+﻿const db = require('../config/database');
 
-// GET: Obtener el catálogo actual
+// GET: Obtener el catÃ¡logo actual
 exports.getCatalogo = async (req, res) => {
   try {
     const query = 'SELECT * FROM catalogos ORDER BY id DESC LIMIT 1';
@@ -9,7 +9,7 @@ exports.getCatalogo = async (req, res) => {
     if (catalogo.length === 0) {
       return res.status(404).json({
         success: false,
-        message: 'No hay catálogo disponible'
+        message: 'No hay catÃ¡logo disponible'
       });
     }
 
@@ -18,10 +18,10 @@ exports.getCatalogo = async (req, res) => {
       ...catalogo[0]
     });
   } catch (error) {
-    console.error('Error al obtener catálogo:', error);
+    console.error('Error al obtener catÃ¡logo:', error);
     res.status(500).json({
       success: false,
-      message: 'Error al obtener el catálogo',
+      message: 'Error al obtener el catÃ¡logo',
       error: error.message
     });
   }
@@ -44,7 +44,7 @@ exports.registrarDescarga = async (req, res) => {
     if (result.affectedRows === 0) {
       return res.status(404).json({
         success: false,
-        message: 'Catálogo no encontrado'
+        message: 'CatÃ¡logo no encontrado'
       });
     }
 
@@ -61,7 +61,7 @@ exports.registrarDescarga = async (req, res) => {
   }
 };
 
-// POST: Crear/Actualizar un catálogo
+// POST: Crear/Actualizar un catÃ¡logo
 exports.crearCatalogo = async (req, res) => {
   try {
     const { titulo, anio, archivo_pdf } = req.body;
@@ -69,11 +69,11 @@ exports.crearCatalogo = async (req, res) => {
     if (!titulo || !archivo_pdf) {
       return res.status(400).json({
         success: false,
-        message: 'Título y archivo PDF son requeridos'
+        message: 'TÃ­tulo y archivo PDF son requeridos'
       });
     }
 
-    // Primero, obtener el último catálogo
+    // Primero, obtener el Ãºltimo catÃ¡logo
     const [catalogoActual] = await db.query(
       'SELECT id FROM catalogos ORDER BY id DESC LIMIT 1'
     );
@@ -101,18 +101,18 @@ exports.crearCatalogo = async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Catálogo guardado correctamente'
+      message: 'CatÃ¡logo guardado correctamente'
     });
   } catch (error) {
-    console.error('Error al crear catálogo:', error);
+    console.error('Error al crear catÃ¡logo:', error);
     res.status(500).json({
       success: false,
-      message: 'Error al guardar el catálogo'
+      message: 'Error al guardar el catÃ¡logo'
     });
   }
 };
 
-// GET: Obtener estadísticas del catálogo
+// GET: Obtener estadÃ­sticas del catÃ¡logo
 exports.getEstadisticas = async (req, res) => {
   try {
     const query = 'SELECT titulo, anio, descargas, ultima_descarga FROM catalogos ORDER BY id DESC LIMIT 1';
@@ -123,10 +123,10 @@ exports.getEstadisticas = async (req, res) => {
       stats: stats[0] || {}
     });
   } catch (error) {
-    console.error('Error al obtener estadísticas:', error);
+    console.error('Error al obtener estadÃ­sticas:', error);
     res.status(500).json({
       success: false,
-      message: 'Error al obtener estadísticas'
+      message: 'Error al obtener estadÃ­sticas'
     });
   }
 }; 

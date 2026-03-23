@@ -7,20 +7,20 @@ const CatalogoRosamia = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [downloadSuccess, setDownloadSuccess] = useState(false);
   const [catalogo, setCatalogo] = useState(null);
-  const [isLoadingCatalogo, setIsLoadingCatalogo] = useState(true); // Nuevo estado para la carga del catálogo
+  const [isLoadingCatalogo, setIsLoadingCatalogo] = useState(true); // Nuevo estado para la carga del catÃƒÂ¡logo
   const [error, setError] = useState(null); // Estado para manejar errores
 
-  // 1. Cargar el catálogo desde la API al iniciar
+  // 1. Cargar el catÃƒÂ¡logo desde la API al iniciar
   useEffect(() => {
     const fetchCatalogo = async () => {
       try {
         setIsLoadingCatalogo(true);
         setError(null);
-        const res = await axios.get("http://localhost:5000/api/catalogo"); 
+        const res = await axios.get("/api/catalogo"); 
         setCatalogo(res.data);
       } catch (error) {
-        console.error("Error cargando catálogo:", error);
-        setError("No se pudo cargar el catálogo. Por favor, intenta más tarde.");
+        console.error("Error cargando catÃƒÂ¡logo:", error);
+        setError("No se pudo cargar el catÃƒÂ¡logo. Por favor, intenta mÃƒÂ¡s tarde.");
       } finally {
         setIsLoadingCatalogo(false);
       }
@@ -33,8 +33,8 @@ const CatalogoRosamia = () => {
     setIsLoading(true);
 
     try {
-      // 2. Ruta dinámica usando la URL de tu backend y el nombre del archivo de la BD
-      const pdfUrl = `http://localhost:5000/uploads/${catalogo.archivo_pdf}`;
+      // 2. Ruta dinÃƒÂ¡mica usando la URL de tu backend y el nombre del archivo de la BD
+      const pdfUrl = `/uploads/${catalogo.archivo_pdf}`;
       
       // Crear un enlace para descargar
       const link = document.createElement('a');
@@ -45,7 +45,7 @@ const CatalogoRosamia = () => {
       document.body.removeChild(link);
 
       // 3. Opcional: Avisar al backend que hubo una descarga
-      await axios.put(`http://localhost:5000/api/catalogo/descarga/${catalogo.id}`);
+      await axios.put(`/api/catalogo/descarga/${catalogo.id}`);
 
       setDownloadSuccess(true);
       setTimeout(() => setDownloadSuccess(false), 5000);
@@ -63,7 +63,7 @@ const CatalogoRosamia = () => {
       <div className="catalogo-container">
         <div className="centered-content">
           <div className="loading-spinner"></div>
-          <p className="loading-text">Cargando catálogo...</p>
+          <p className="loading-text">Cargando catÃƒÂ¡logo...</p>
         </div>
       </div>
     );
@@ -91,15 +91,15 @@ const CatalogoRosamia = () => {
   return (
     <div className="catalogo-container">
       <div className="centered-content">
-        {/* Usamos el título que viene de la base de datos con validación */}
+        {/* Usamos el tÃƒÂ­tulo que viene de la base de datos con validaciÃƒÂ³n */}
         <h1 className="catalogo-title">
-          {catalogo ? `¡${catalogo.titulo || "Catálogo"} listo!` : "Catálogo"}
+          {catalogo ? `Ã‚Â¡${catalogo.titulo || "CatÃƒÂ¡logo"} listo!` : "CatÃƒÂ¡logo"}
         </h1>
 
         <p className="catalogo-description">
           {catalogo 
-            ? `Obtén nuestro catálogo actualizado. ${catalogo.anio ? `Versión año: ${catalogo.anio}` : ''}`
-            : "Obtén nuestro catálogo actualizado."}
+            ? `ObtÃƒÂ©n nuestro catÃƒÂ¡logo actualizado. ${catalogo.anio ? `VersiÃƒÂ³n aÃƒÂ±o: ${catalogo.anio}` : ''}`
+            : "ObtÃƒÂ©n nuestro catÃƒÂ¡logo actualizado."}
         </p>
 
         <button 
@@ -115,12 +115,12 @@ const CatalogoRosamia = () => {
           ) : downloadSuccess ? (
             <>
               <CheckCircle size={20} />
-              ¡Descargado!
+              Ã‚Â¡Descargado!
             </>
           ) : (
             <>
               <Download size={20} />
-              Descargar Catálogo
+              Descargar CatÃƒÂ¡logo
             </>
           )}
         </button>
@@ -128,7 +128,7 @@ const CatalogoRosamia = () => {
         {downloadSuccess && (
           <div className="success-message">
             <CheckCircle size={16} />
-            <span>¡Catálogo descargado exitosamente!</span>
+            <span>Ã‚Â¡CatÃƒÂ¡logo descargado exitosamente!</span>
           </div>
         )}
       </div>
